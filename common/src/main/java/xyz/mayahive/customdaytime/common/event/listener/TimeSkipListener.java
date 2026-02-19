@@ -12,7 +12,7 @@ public class TimeSkipListener {
     private final CustomDaytimeContext context;
 
     public void onTimeSkipEvent(TimeSkipEvent event) {
-        Platform platform = context.getPlatform();
+        Platform platform = context.platform();
 
         TimeSkipCause cause = event.timeSkipCause();
 

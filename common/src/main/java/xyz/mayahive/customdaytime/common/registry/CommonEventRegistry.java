@@ -9,7 +9,7 @@ public final class CommonEventRegistry {
 
     public static void initialize(CustomDaytimeContext context) {
 
-        EventBus eventBus = context.getEventBus();
+        EventBus eventBus = context.eventBus();
 
         eventBus.register(TimeAccelerationEvent.class, new WorldActivityListener(context)::onTimeAccelerationEvent);
 

@@ -14,35 +14,35 @@ public class WorldLifeCycleListener {
     private final CustomDaytimeContext context;
 
     public void onWorldLoad(WorldLoadEvent event) {
-        Platform platform = context.getPlatform();
+        Platform platform = context.platform();
         PlatformWorld world = event.world();
         WorldKey key = world.getKey();
 
-        if (!context.getConfigService().getRootKeys().contains(key.asString())) {
+        if (!context.configService().getRootKeys().contains(key.asString())) {
             if (platform.debug()) platform.getLogger().debug("WorldLoadEvent: World '" + key.asString() + "' is not defined in config, skipping.");
             return;
         }
 
-        context.getWorldCache().registerWorld(world);
+        context.worldCache().registerWorld(world);
 
-        context.getWorldTimeManager().start(key);
+        context.worldTimeManager().start(key);
 
         if (platform.debug()) platform.getLogger().debug("Registered WorldLoadEvent for world: " + key.asString());
     }
 
     public void onWorldUnload(WorldUnloadEvent event) {
-        Platform platform = context.getPlatform();
+        Platform platform = context.platform();
         PlatformWorld world = event.world();
         WorldKey key = world.getKey();
 
-        if (!context.getConfigService().getRootKeys().contains(key.asString())) {
+        if (!context.configService().getRootKeys().contains(key.asString())) {
             if (platform.debug()) platform.getLogger().debug("WorldUnloadEvent: World '" + key.asString() + "' is not defined in config, skipping.");
             return;
         }
 
-        context.getWorldCache().unregisterWorld(world);
+        context.worldCache().unregisterWorld(world);
 
-        context.getWorldTimeManager().stop(key);
+        context.worldTimeManager().stop(key);
 
         if (platform.debug()) platform.getLogger().debug("Registered WorldUnloadEvent for world: " + key.asString());
     }

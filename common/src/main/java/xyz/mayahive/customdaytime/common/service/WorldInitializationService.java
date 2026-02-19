@@ -12,8 +12,8 @@ public class WorldInitializationService {
     private final CustomDaytimeContext context;
 
     public void syncExistingWorlds() {
-        for (PlatformWorld world : context.getPlatform().getWorlds()) {
-            context.getEventBus().fire(new WorldLoadEvent(world));
+        for (PlatformWorld world : context.platform().getWorlds()) {
+            context.eventBus().fire(new WorldLoadEvent(world));
         }
     }
 

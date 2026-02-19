@@ -16,13 +16,13 @@ public class WorldActivityListener {
     private final CustomDaytimeContext context;
 
     public void onWorldPlayerCountChangeEvent(WorldPlayerCountChangeEvent event) {
-        Platform platform = context.getPlatform();
+        Platform platform = context.platform();
         PlatformWorld world = event.world();
         WorldKey key = world.getKey();
         int totalPlayers = world.getPlayers().size();
 
-        context.getPlatform().getScheduler().runLater(
-                () -> context.getWorldTimeManager().setTotalPlayers(key, totalPlayers),
+        context.platform().getScheduler().runLater(
+                () -> context.worldTimeManager().setTotalPlayers(key, totalPlayers),
                 1
         );
 
@@ -30,15 +30,15 @@ public class WorldActivityListener {
     }
 
     public void onWorldSleepingPlayerCountChange(WorldSleepingPlayerCountChangeEvent event) {
-        Platform platform = context.getPlatform();
+        Platform platform = context.platform();
         PlatformWorld world = event.world();
         WorldKey key = world.getKey();
 
 
-        context.getPlatform().getScheduler().runLater(
+        context.platform().getScheduler().runLater(
                 () -> {
                     int sleepingPlayers = world.getSleepingPlayerCount();
-                    context.getWorldTimeManager().setSleepingPlayers(key, sleepingPlayers);
+                    context.worldTimeManager().setSleepingPlayers(key, sleepingPlayers);
                     if (platform.debug()) platform.getLogger().debug("Registered WorldSleepingPlayerCountChangeEvent. Updated sleeping players count to " + sleepingPlayers);
                 },
                 1
@@ -48,7 +48,7 @@ public class WorldActivityListener {
     }
 
     public void onTimeAccelerationEvent(TimeAccelerationEvent event) {
-        Platform platform = context.getPlatform();
+        Platform platform = context.platform();
         PlatformWorld world = event.world();
 
         if (event.accelerating()) {

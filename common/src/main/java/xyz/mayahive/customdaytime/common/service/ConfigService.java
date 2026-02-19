@@ -33,6 +33,7 @@ public class ConfigService {
                 .build();
 
         rootNode = loadConfig();
+        saveDefaultConfig();
     }
 
     private CommentedConfigurationNode loadConfig() {

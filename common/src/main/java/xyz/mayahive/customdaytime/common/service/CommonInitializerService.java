@@ -7,7 +7,6 @@ public class CommonInitializerService {
 
     public static void initialize(CustomDaytimeContext context) {
         CommonEventRegistry.initialize(context);
-        context.getConfigService().saveDefaultConfig();
         new WorldInitializationService(context).syncExistingWorlds();
     }
 }

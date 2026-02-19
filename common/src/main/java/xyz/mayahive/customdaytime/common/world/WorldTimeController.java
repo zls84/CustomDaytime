@@ -36,7 +36,7 @@ public class WorldTimeController {
     private long lastCycleTime = -1;
 
     public void start() {
-        world = context.getWorldCache().getWorld(key);
+        world = context.worldCache().getWorld(key);
         if (world != null) {
             totalPlayers = world.getPlayers().size();
             sleepingPlayers = world.getSleepingPlayerCount();
@@ -46,7 +46,7 @@ public class WorldTimeController {
         }
 
         reloadConfig();
-        task = context.getPlatform().getScheduler().runRepeating(this::tick, 1);
+        task = context.platform().getScheduler().runRepeating(this::tick, 1);
     }
 
     public void stop() {
@@ -58,7 +58,7 @@ public class WorldTimeController {
     }
 
     private void reloadConfig() {
-        ConfigService configService = context.getConfigService();
+        ConfigService configService = context.configService();
 
         double dayMinutes = configService.getConfigValue(Double.class, 10.0, key.asString(), "dayLength");
         double nightMinutes = configService.getConfigValue(Double.class, 10.0, key.asString(), "nightLength");
@@ -126,10 +126,10 @@ public class WorldTimeController {
 
     private void handleAccelerationEvent(PlatformWorld world, boolean nowAccelerating) {
         if (nowAccelerating && !accelerating) {
-            context.getEventBus().fire(new TimeAccelerationEvent(world, true));
+            context.eventBus().fire(new TimeAccelerationEvent(world, true));
             DebugService.log(context, "Time acceleration started for world " + world.getKeyString());
         } else if (!nowAccelerating && accelerating) {
-            context.getEventBus().fire(new TimeAccelerationEvent(world, false));
+            context.eventBus().fire(new TimeAccelerationEvent(world, false));
             DebugService.log(context, "Time acceleration stopped for world " + world.getKeyString());
         }
         accelerating = nowAccelerating;

@@ -28,7 +28,7 @@ public final class CustomDaytimePaper extends JavaPlugin {
 
         bootstrap.initialize();
 
-        EventBus eventBus = bootstrap.context().getEventBus();
+        EventBus eventBus = bootstrap.context().eventBus();
 
         Bukkit.getPluginManager().registerEvents(new BedActivityListener(eventBus), this);
         Bukkit.getPluginManager().registerEvents(new TimeSkipListener(), this);

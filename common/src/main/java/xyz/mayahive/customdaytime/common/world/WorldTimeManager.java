@@ -38,12 +38,12 @@ public class WorldTimeManager {
     public void setTotalPlayers(WorldKey key, int totalPlayers) {
         WorldTimeController controller = controllers.get(key);
         if (controller == null) return;
-        controller.setTotalPlayers(totalPlayers);
+        controller.totalPlayers(totalPlayers);
     }
 
     public void setSleepingPlayers(WorldKey key, int sleepingPlayers) {
         WorldTimeController controller = controllers.get(key);
         if (controller == null) return;
-        controller.setSleepingPlayers(sleepingPlayers);
+        controller.sleepingPlayers(sleepingPlayers);
     }
 }
