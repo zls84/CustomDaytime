@@ -1,4 +1,3 @@
 package xyz.mayahive.customdaytime.common.event;
 
-public interface Event {
-}
+public interface Event { }

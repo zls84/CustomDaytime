@@ -1,0 +1,26 @@
+package xyz.mayahive.customdaytime.api.platform;
+
+/**
+ * Synchronous scheduler for running tasks on the main thread.
+ */
+public interface PlatformScheduler {
+
+    /**
+     * Runs a task repeatedly with the given interval in ticks.
+     *
+     * @param runnable the task to execute
+     * @param intervalTicks number of ticks between executions (positive)
+     * @return PlatformTask that can be canceled.
+     */
+    PlatformTask runRepeating(Runnable runnable, long intervalTicks);
+
+    /**
+     * Runs a task once after the given delay in ticks.
+     *
+     * @param runnable the task to execute
+     * @param delayTicks number of ticks to wait before execution (non-negative)
+     * @return PlatformTask that can be canceled before execution.
+     */
+    PlatformTask runLater(Runnable runnable, long delayTicks);
+
+}
