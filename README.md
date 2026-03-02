@@ -21,6 +21,7 @@ Customize Minecraft's day/night cycle and experience smoother nights with this l
 
 - **Easy-to-Use Config**  
   All values are adjustable in the `config.conf` file. All values are configured for each world separately.
+  Custom Daytime supports multiple worlds. Copy the `"minecraft:overworld"` block, paste it at the end of the config, rename it to the target world key, and edit the values.
     ```hocon
     "minecraft:overworld" {
     # Length of the daytime cycle in minutes
