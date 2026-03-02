@@ -7,7 +7,6 @@ import xyz.mayahive.customdaytime.api.platform.PlatformTask;
 import xyz.mayahive.customdaytime.api.platform.PlatformWorld;
 import xyz.mayahive.customdaytime.api.model.WorldKey;
 import xyz.mayahive.customdaytime.common.context.CustomDaytimeContext;
-import xyz.mayahive.customdaytime.common.event.type.TimeAccelerationEvent;
 import xyz.mayahive.customdaytime.common.service.ConfigService;
 import xyz.mayahive.customdaytime.common.service.DebugService;
 
@@ -22,6 +21,8 @@ public class WorldTimeController {
     private double dayIncrement;
     private double nightIncrement;
     private double accelerationMultiplier;
+    private long lastObservedWorldTime = -1;
+    boolean accelerationEnabled = true;
 
     @Getter
     @Setter
@@ -34,19 +35,27 @@ public class WorldTimeController {
     private double carry = 0.0;
     private boolean accelerating =  false;
     private long lastCycleTime = -1;
+    private long baseTime;
+    private long accumulatedTicks;
 
     public void start() {
         world = context.worldCache().getWorld(key);
         if (world != null) {
-            totalPlayers = world.getPlayers().size();
-            sleepingPlayers = world.getSleepingPlayerCount();
+
+            world.time().ifPresent(time -> {
+                baseTime = time;
+                accumulatedTicks = 0;
+            });
+
+            totalPlayers = world.playerCount();
+            sleepingPlayers = world.sleepingPlayerCount();
             DebugService.log(context, "Starting World Time Controller for world: " + key.asString());
         } else {
             DebugService.log(context, "World not loaded yet: " + key.asString());
         }
 
         reloadConfig();
-        task = context.platform().getScheduler().runRepeating(this::tick, 1);
+        task = context.platform().scheduler().runRepeating(this::tick, 1);
     }
 
     public void stop() {
@@ -60,6 +69,7 @@ public class WorldTimeController {
     private void reloadConfig() {
         ConfigService configService = context.configService();
 
+        accelerationEnabled = configService.getConfigValue(Boolean.class, true, key.asString(), "accelerationEnabled");
         double dayMinutes = configService.getConfigValue(Double.class, 10.0, key.asString(), "dayLength");
         double nightMinutes = configService.getConfigValue(Double.class, 10.0, key.asString(), "nightLength");
         accelerationMultiplier = configService.getConfigValue(Double.class, 100.0, key.asString(), "AccelerationMultiplier");
@@ -77,16 +87,32 @@ public class WorldTimeController {
             return;
         }
 
-        world.getTime().ifPresent(currentTime -> updateWorld(world, currentTime));
+        if (!world.gameRuleAdvanceTime()) return;
+
+        world.time().ifPresent(currentTime -> updateWorld(world, currentTime));
     }
 
     private void updateWorld(PlatformWorld world, long currentTime) {
-        boolean  isDay = currentTime < 12000;
+
+        if (lastObservedWorldTime != -1) {
+            long expectedTime = baseTime + accumulatedTicks;
+            if (Math.abs(currentTime - expectedTime) > 20) {
+                DebugService.log(context, "External time change detected. Resynchronizing controller.");
+                baseTime = currentTime;
+                accumulatedTicks = 0;
+                carry = 0;
+            }
+        }
+
+        lastObservedWorldTime = currentTime;
+
+        long dayCycleTime = currentTime % 24000;
+        boolean isDay = dayCycleTime < 12000;
 
         if (lastCycleTime != -1) {
-            boolean lastWasDay = lastCycleTime < 12000;
+            boolean lastWasDay = (lastCycleTime % 24000) < 12000;
             if (lastWasDay != isDay) {
-                DebugService.log(context, "Day/Night cycle change detected for world " + world.getKeyString() + " (lastCycleTime=" + lastCycleTime + ", currentTime=" + currentTime + ")");
+                DebugService.log(context, "Day/Night cycle change detected for world " + world.keyAsString() + " (lastCycleTime=" + lastCycleTime + ", currentTime=" + currentTime + ")");
                 reloadConfig();
                 carry = 0;
             }
@@ -95,6 +121,7 @@ public class WorldTimeController {
         lastCycleTime = currentTime;
 
         double increment = isDay ? dayIncrement : nightIncrement;
+
         boolean nowAccelerating = shouldAccelerate(world, isDay);
 
         if (nowAccelerating) {
@@ -104,9 +131,15 @@ public class WorldTimeController {
         carry += increment;
 
         long wholeTicks = (long) carry;
+
         if (wholeTicks > 0) {
-            world.setTime(currentTime + wholeTicks);
+            accumulatedTicks += wholeTicks;
             carry -= wholeTicks;
+
+            boolean setTime = world.time(baseTime + accumulatedTicks);
+            if (!setTime) {
+                context.platform().logger().error("Failed to set world time for world " + key.asString());
+            }
         }
 
         handleAccelerationEvent(world, nowAccelerating);
@@ -114,23 +147,27 @@ public class WorldTimeController {
 
     private boolean shouldAccelerate(PlatformWorld world, boolean isDay) {
 
-        if (isDay) {return false;}
+        if (!accelerationEnabled) return false;
+
+        if (isDay) return false;
 
         if (totalPlayers == 0) return false;
 
         double percentage = ((double) sleepingPlayers / totalPlayers) * 100;
-        int required = world.getGameRulePlayerSleepingPercentage();
+        int required = world.gameRulePlayerSleepingPercentage();
+
+        if (context.platform().debug()) {
+            context.platform().logger().info("Should Accelerate boolean value for world " + key.asString() + " (percentage=" + percentage + " / " + required + ")");
+        }
 
         return percentage >= required;
     }
 
     private void handleAccelerationEvent(PlatformWorld world, boolean nowAccelerating) {
         if (nowAccelerating && !accelerating) {
-            context.eventBus().fire(new TimeAccelerationEvent(world, true));
-            DebugService.log(context, "Time acceleration started for world " + world.getKeyString());
+            DebugService.log(context, "Time acceleration started for world " + world.keyAsString());
         } else if (!nowAccelerating && accelerating) {
-            context.eventBus().fire(new TimeAccelerationEvent(world, false));
-            DebugService.log(context, "Time acceleration stopped for world " + world.getKeyString());
+            DebugService.log(context, "Time acceleration stopped for world " + world.keyAsString());
         }
         accelerating = nowAccelerating;
     }

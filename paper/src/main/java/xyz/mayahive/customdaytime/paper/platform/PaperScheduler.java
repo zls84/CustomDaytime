@@ -14,7 +14,7 @@ public class PaperScheduler implements PlatformScheduler {
 
     @Override
     public PlatformTask runRepeating(Runnable runnable, long intervalTicks) {
-        ScheduledTask task =  Bukkit.getGlobalRegionScheduler().runAtFixedRate(
+        ScheduledTask task = Bukkit.getGlobalRegionScheduler().runAtFixedRate(
                 plugin,
                 scheduledTask -> runnable.run(),
                 1,
@@ -25,14 +25,17 @@ public class PaperScheduler implements PlatformScheduler {
     }
 
     @Override
-    public PlatformTask runLater(Runnable runnable, long delayTicks) {
+    public void runLater(Runnable runnable, long delayTicks) {
 
-        ScheduledTask task = Bukkit.getGlobalRegionScheduler().runDelayed(
+        Bukkit.getGlobalRegionScheduler().runDelayed(
                 plugin,
                 scheduledTask -> runnable.run(),
                 delayTicks
         );
+    }
 
-        return new PaperTask(task);
+    @Override
+    public void runTaskAsync(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
     }
 }

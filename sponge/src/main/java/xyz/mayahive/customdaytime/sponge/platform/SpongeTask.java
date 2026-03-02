@@ -1,11 +1,11 @@
-package xyz.mayahive.customdaytime.paper.platform;
+package xyz.mayahive.customdaytime.sponge.platform;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.RequiredArgsConstructor;
+import org.spongepowered.api.scheduler.ScheduledTask;
 import xyz.mayahive.customdaytime.api.platform.PlatformTask;
 
 @RequiredArgsConstructor
-public class PaperTask implements PlatformTask {
+public class SpongeTask implements PlatformTask {
 
     private final ScheduledTask task;
 

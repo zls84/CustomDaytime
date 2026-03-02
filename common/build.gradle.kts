@@ -3,16 +3,18 @@ plugins {
     id("java-library")
 }
 
-group = "xyz.mayahive.customdaytime"
-version = "2.0.0-SNAPSHOT"
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
     api(project(":api"))
-    implementation("org.spongepowered:configurate-hocon:4.2.0")
-    compileOnly("org.projectlombok:lombok:1.18.34")
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
+
+    implementation(libs.configurate.hocon)
+    implementation(libs.gson)
+}
+
+val javaTarget = 21 // Sponge targets a minimum of Java 21
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(javaTarget))
 }

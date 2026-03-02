@@ -6,11 +6,8 @@ import org.bukkit.GameRules;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import xyz.mayahive.customdaytime.api.model.WorldKey;
-import xyz.mayahive.customdaytime.api.platform.PlatformPlayer;
 import xyz.mayahive.customdaytime.api.platform.PlatformWorld;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -19,23 +16,23 @@ public class PaperWorld implements PlatformWorld {
     private final World world;
 
     @Override
-    public WorldKey getKey() {
+    public WorldKey key() {
         Key key = world.getKey();
         return new WorldKey(key.namespace(), key.value());
     }
 
     @Override
-    public String getKeyString() {
+    public String keyAsString() {
         return world.getKey().asString();
     }
 
     @Override
-    public Optional<Long> getTime() {
+    public Optional<Long> time() {
         return Optional.of(world.getFullTime());
     }
 
     @Override
-    public boolean setTime(long time) {
+    public boolean time(long time) {
         if (world == null) {
             return false;
         }
@@ -44,17 +41,12 @@ public class PaperWorld implements PlatformWorld {
     }
 
     @Override
-    public List<PlatformPlayer> getPlayers() {
-        List<PlatformPlayer> players = new ArrayList<>();
-
-        for (Player player : world.getPlayers()) {
-            players.add(new PaperPlayer(player));
-        }
-        return players;
+    public int playerCount() {
+        return world.getPlayerCount();
     }
 
     @Override
-    public int getSleepingPlayerCount() {
+    public int sleepingPlayerCount() {
         int count = 0;
 
         for (Player player : world.getPlayers()) {
@@ -67,12 +59,12 @@ public class PaperWorld implements PlatformWorld {
     }
 
     @Override
-    public boolean getGameRuleAdvanceTime() {
+    public boolean gameRuleAdvanceTime() {
         return Boolean.TRUE.equals(world.getGameRuleValue(GameRules.ADVANCE_TIME));
     }
 
     @Override
-    public int getGameRulePlayerSleepingPercentage() {
+    public int gameRulePlayerSleepingPercentage() {
         int value = Optional.ofNullable(world.getGameRuleValue(GameRules.PLAYERS_SLEEPING_PERCENTAGE)).orElse(100);
         return Math.max(0, Math.min(100, value));
     }

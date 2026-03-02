@@ -1,5 +1,6 @@
 package xyz.mayahive.customdaytime.api.platform;
 
+import xyz.mayahive.customdaytime.api.model.PlatformType;
 import xyz.mayahive.customdaytime.api.model.WorldKey;
 
 import java.nio.file.Path;
@@ -15,35 +16,21 @@ public interface Platform {
      *
      * @return the platform name
      */
-    String getPlatformName();
-
-    /**
-     * Returns the version of the platform/loader.
-     *
-     * @return the platform version
-     */
-    String getPlatformVersion();
+    PlatformType platform();
 
     /**
      * Returns the version of Minecraft.
      *
      * @return Minecraft version
      */
-    String getMinecraftVersion();
-
-    /**
-     * Returns the name of the project (e.g., "CustomDaytime").
-     *
-     * @return the project name
-     */
-    String getProjectName();
+    String minecraftVersion();
 
     /**
      * Returns the version of the project.
      *
      * @return the project version
      */
-    String getProjectVersion();
+    String projectVersion();
 
 
     /**
@@ -51,21 +38,21 @@ public interface Platform {
      *
      * @return path for config folder
      */
-    Path getConfigFolder();
+    Path configDirectory();
 
     /**
      * Returns the logger for outputting messages.
      *
      * @return the logger
      */
-    PlatformLogger getLogger();
+    PlatformLogger logger();
 
     /**
      * Returns the scheduler for running tasks.
      *
      * @return the scheduler
      */
-    PlatformScheduler getScheduler();
+    PlatformScheduler scheduler();
 
     /**
      * Returns the {@link PlatformWorld} corresponding to the given WorldKey.
@@ -73,7 +60,7 @@ public interface Platform {
      * @param key the world key
      * @return the PlatformWorld, or null if not found
      */
-    PlatformWorld getWorld(WorldKey key);
+    PlatformWorld world(WorldKey key);
 
 
     /**
@@ -81,7 +68,7 @@ public interface Platform {
      *
      * @return list of loaded worlds
      */
-    List<PlatformWorld> getWorlds();
+    List<PlatformWorld> worlds();
 
     /**
      * Returns whether project is in debug mode.

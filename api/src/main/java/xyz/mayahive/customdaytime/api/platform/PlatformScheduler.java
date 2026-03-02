@@ -19,8 +19,12 @@ public interface PlatformScheduler {
      *
      * @param runnable the task to execute
      * @param delayTicks number of ticks to wait before execution (non-negative)
-     * @return PlatformTask that can be canceled before execution.
      */
-    PlatformTask runLater(Runnable runnable, long delayTicks);
+    void runLater(Runnable runnable, long delayTicks);
 
+    /**
+     * Runs task asynchronously.
+     * @param runnable the task to execute
+     */
+    void runTaskAsync(Runnable runnable);
 }

@@ -14,23 +14,9 @@ public interface PlatformLogger {
     void info(String message);
 
     /**
-     * Logs a warning message.
-     *
-     * @param message the message to log
-     */
-    void warn(String message);
-
-    /**
      * Logs an error message.
      *
      * @param message the message to log
      */
     void error(String message);
-
-    /**
-     * Logs a debug message.
-     *
-     * @param message the message to log
-     */
-    void debug(String message);
 }

@@ -16,10 +16,10 @@ public class WorldLifeCycleListener {
     public void onWorldLoad(WorldLoadEvent event) {
         Platform platform = context.platform();
         PlatformWorld world = event.world();
-        WorldKey key = world.getKey();
+        WorldKey key = world.key();
 
         if (!context.configService().getRootKeys().contains(key.asString())) {
-            if (platform.debug()) platform.getLogger().debug("WorldLoadEvent: World '" + key.asString() + "' is not defined in config, skipping.");
+            if (platform.debug()) platform.logger().info("WorldLoadEvent: World '" + key.asString() + "' is not defined in config, skipping.");
             return;
         }
 
@@ -27,16 +27,16 @@ public class WorldLifeCycleListener {
 
         context.worldTimeManager().start(key);
 
-        if (platform.debug()) platform.getLogger().debug("Registered WorldLoadEvent for world: " + key.asString());
+        if (platform.debug()) platform.logger().info("Registered WorldLoadEvent for world: " + key.asString());
     }
 
     public void onWorldUnload(WorldUnloadEvent event) {
         Platform platform = context.platform();
         PlatformWorld world = event.world();
-        WorldKey key = world.getKey();
+        WorldKey key = world.key();
 
         if (!context.configService().getRootKeys().contains(key.asString())) {
-            if (platform.debug()) platform.getLogger().debug("WorldUnloadEvent: World '" + key.asString() + "' is not defined in config, skipping.");
+            if (platform.debug()) platform.logger().info("WorldUnloadEvent: World '" + key.asString() + "' is not defined in config, skipping.");
             return;
         }
 
@@ -44,7 +44,7 @@ public class WorldLifeCycleListener {
 
         context.worldTimeManager().stop(key);
 
-        if (platform.debug()) platform.getLogger().debug("Registered WorldUnloadEvent for world: " + key.asString());
+        if (platform.debug()) platform.logger().info("Registered WorldUnloadEvent for world: " + key.asString());
     }
 
 }

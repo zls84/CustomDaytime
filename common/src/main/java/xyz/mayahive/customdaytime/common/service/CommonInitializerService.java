@@ -8,5 +8,6 @@ public class CommonInitializerService {
     public static void initialize(CustomDaytimeContext context) {
         CommonEventRegistry.initialize(context);
         new WorldInitializationService(context).syncExistingWorlds();
+        new UpdateCheckerService(context.platform(), "C7YliNqw");
     }
 }

@@ -16,7 +16,7 @@ public class TimeSkipListener {
 
         TimeSkipCause cause = event.timeSkipCause();
 
-        if (platform.debug()) platform.getLogger().debug("Registered TimeSkipEvent. TimeSkipCause: " + cause);
+        if (platform.debug()) platform.logger().info("Registered TimeSkipEvent. TimeSkipCause: " + cause);
     }
 
 }

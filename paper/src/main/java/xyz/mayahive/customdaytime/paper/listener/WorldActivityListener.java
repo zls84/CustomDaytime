@@ -17,24 +17,17 @@ public class WorldActivityListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        PaperWorld world =  new PaperWorld(event.getPlayer().getWorld());
-
-        eventBus.fire(new WorldPlayerCountChangeEvent(world));
+        eventBus.fire(new WorldPlayerCountChangeEvent(new PaperWorld(event.getPlayer().getWorld())));
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        PaperWorld world =  new PaperWorld(event.getPlayer().getWorld());
-
-        eventBus.fire(new WorldPlayerCountChangeEvent(world));
+        eventBus.fire(new WorldPlayerCountChangeEvent(new PaperWorld(event.getPlayer().getWorld())));
     }
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-        PaperWorld fromWorld = new PaperWorld(event.getFrom());
-        PaperWorld toWorld = new PaperWorld(event.getPlayer().getWorld());
-
-        eventBus.fire(new WorldPlayerCountChangeEvent(fromWorld));
-        eventBus.fire(new WorldPlayerCountChangeEvent(toWorld));
+        eventBus.fire(new WorldPlayerCountChangeEvent(new PaperWorld(event.getFrom())));
+        eventBus.fire(new WorldPlayerCountChangeEvent(new PaperWorld(event.getPlayer().getWorld())));
     }
 }

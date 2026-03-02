@@ -26,10 +26,10 @@ public class ConfigService {
 
     public ConfigService(Platform platform) {
         this.platform = platform;
-        this.logger = platform.getLogger();
+        this.logger = platform.logger();
 
         this.loader = HoconConfigurationLoader.builder()
-                .path(platform.getConfigFolder().resolve("config.conf"))
+                .path(platform.configDirectory().resolve("config.conf"))
                 .build();
 
         rootNode = loadConfig();
@@ -69,7 +69,7 @@ public class ConfigService {
             configNode.set(value.getClass(), value);
             saveConfig();
         } catch (SerializationException e) {
-            logger.warn("An error occurred while loading configuration value: " + e.getMessage());
+            logger.error("An error occurred while loading configuration value: " + e.getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class ConfigService {
     }
 
     public void saveDefaultConfig() {
-        Path targetPath = platform.getConfigFolder().resolve("config.conf");
+        Path targetPath = platform.configDirectory().resolve("config.conf");
 
         if (Files.exists(targetPath)) {return;}
 

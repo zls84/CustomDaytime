@@ -6,10 +6,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.mayahive.customdaytime.api.platform.Platform;
 import xyz.mayahive.customdaytime.common.bootstrap.AbstractBootstrap;
 import xyz.mayahive.customdaytime.common.event.EventBus;
+import xyz.mayahive.customdaytime.common.service.ConfigService;
 import xyz.mayahive.customdaytime.paper.listener.BedActivityListener;
 import xyz.mayahive.customdaytime.paper.listener.TimeSkipListener;
 import xyz.mayahive.customdaytime.paper.listener.WorldActivityListener;
-import xyz.mayahive.customdaytime.paper.listener.WorldLifeCycleListener;
+import xyz.mayahive.customdaytime.paper.listener.WorldListener;
 import xyz.mayahive.customdaytime.paper.platform.PaperPlatform;
 
 public final class CustomDaytimePaper extends JavaPlugin {
@@ -29,10 +30,11 @@ public final class CustomDaytimePaper extends JavaPlugin {
         bootstrap.initialize();
 
         EventBus eventBus = bootstrap.context().eventBus();
+        ConfigService configService = bootstrap.context().configService();
 
         Bukkit.getPluginManager().registerEvents(new BedActivityListener(eventBus), this);
-        Bukkit.getPluginManager().registerEvents(new TimeSkipListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TimeSkipListener(configService), this);
         Bukkit.getPluginManager().registerEvents(new WorldActivityListener(eventBus), this);
-        Bukkit.getPluginManager().registerEvents(new WorldLifeCycleListener(eventBus), this);
+        Bukkit.getPluginManager().registerEvents(new WorldListener(eventBus), this);
     }
 }

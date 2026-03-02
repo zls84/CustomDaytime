@@ -1,12 +1,10 @@
 package xyz.mayahive.customdaytime.common.event.listener;
 
 import lombok.RequiredArgsConstructor;
-import xyz.mayahive.customdaytime.api.platform.PlatformPlayer;
 import xyz.mayahive.customdaytime.api.platform.PlatformWorld;
 import xyz.mayahive.customdaytime.api.model.WorldKey;
 import xyz.mayahive.customdaytime.api.platform.Platform;
 import xyz.mayahive.customdaytime.common.context.CustomDaytimeContext;
-import xyz.mayahive.customdaytime.common.event.type.TimeAccelerationEvent;
 import xyz.mayahive.customdaytime.common.event.type.WorldPlayerCountChangeEvent;
 import xyz.mayahive.customdaytime.common.event.type.WorldSleepingPlayerCountChangeEvent;
 
@@ -18,46 +16,30 @@ public class WorldActivityListener {
     public void onWorldPlayerCountChangeEvent(WorldPlayerCountChangeEvent event) {
         Platform platform = context.platform();
         PlatformWorld world = event.world();
-        WorldKey key = world.getKey();
-        int totalPlayers = world.getPlayers().size();
+        WorldKey key = world.key();
+        int totalPlayers = world.playerCount();
 
-        context.platform().getScheduler().runLater(
+        context.platform().scheduler().runLater(
                 () -> context.worldTimeManager().setTotalPlayers(key, totalPlayers),
                 1
         );
 
-        if (platform.debug()) platform.getLogger().debug("Registered WorldPlayerCountChangeEvent. Updated total players count to " + totalPlayers);
+        if (platform.debug()) platform.logger().info("Registered WorldPlayerCountChangeEvent. Updated total players count to " + totalPlayers);
     }
 
     public void onWorldSleepingPlayerCountChange(WorldSleepingPlayerCountChangeEvent event) {
         Platform platform = context.platform();
         PlatformWorld world = event.world();
-        WorldKey key = world.getKey();
+        WorldKey key = world.key();
 
 
-        context.platform().getScheduler().runLater(
+        context.platform().scheduler().runLater(
                 () -> {
-                    int sleepingPlayers = world.getSleepingPlayerCount();
+                    int sleepingPlayers = world.sleepingPlayerCount();
                     context.worldTimeManager().setSleepingPlayers(key, sleepingPlayers);
-                    if (platform.debug()) platform.getLogger().debug("Registered WorldSleepingPlayerCountChangeEvent. Updated sleeping players count to " + sleepingPlayers);
+                    if (platform.debug()) platform.logger().info("Registered WorldSleepingPlayerCountChangeEvent. Updated sleeping players count to " + sleepingPlayers);
                 },
                 1
         );
-
-
     }
-
-    public void onTimeAccelerationEvent(TimeAccelerationEvent event) {
-        Platform platform = context.platform();
-        PlatformWorld world = event.world();
-
-        if (event.accelerating()) {
-            for (PlatformPlayer player : world.getPlayers()) {
-                player.sendActionBar("Night races toward dawn..."); //TODO: Implementation for LocalizationService here!
-            }
-        }
-
-        if (platform.debug()) platform.getLogger().debug("Registered TimeAccelerationEvent. Time accelerating: " + event.accelerating());
-    }
-
 }

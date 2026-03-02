@@ -15,17 +15,7 @@ public class PaperLogger implements PlatformLogger {
     }
 
     @Override
-    public void warn(String message) {
-        plugin.getLogger().warning(message);
-    }
-
-    @Override
     public void error(String message) {
         plugin.getLogger().severe(message);
-    }
-
-    @Override
-    public void debug(String message) {
-        plugin.getLogger().info(message);
     }
 }

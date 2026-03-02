@@ -6,7 +6,7 @@ public class DebugService {
 
     public static void log(CustomDaytimeContext context, String message){
         if (context.platform().debug()) {
-            context.platform().getLogger().debug(message);
+            context.platform().logger().info(message);
         }
     }
 }

@@ -11,8 +11,6 @@ public final class CommonEventRegistry {
 
         EventBus eventBus = context.eventBus();
 
-        eventBus.register(TimeAccelerationEvent.class, new WorldActivityListener(context)::onTimeAccelerationEvent);
-
         eventBus.register(TimeSkipEvent.class, new TimeSkipListener(context)::onTimeSkipEvent);
 
         eventBus.register(WorldPlayerCountChangeEvent.class, new WorldActivityListener(context)::onWorldPlayerCountChangeEvent);

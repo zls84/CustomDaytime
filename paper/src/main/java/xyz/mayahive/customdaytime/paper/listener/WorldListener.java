@@ -9,7 +9,7 @@ import xyz.mayahive.customdaytime.common.event.EventBus;
 import xyz.mayahive.customdaytime.paper.platform.PaperWorld;
 
 @RequiredArgsConstructor
-public class WorldLifeCycleListener implements Listener {
+public class WorldListener implements Listener {
 
     private final EventBus eventBus;
 

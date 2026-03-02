@@ -1,11 +1,9 @@
 plugins {
     id("java")
-    id("xyz.jpenilla.run-paper") version "2.3.1"
-    id("com.gradleup.shadow") version "9.3.1"
+    alias(libs.plugins.run.paper)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.plugin.yml)
 }
-
-group = "xyz.mayahive.customdaytime"
-version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -17,10 +15,10 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
-    implementation("org.bstats:bstats-bukkit:3.1.0")
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
-    compileOnly("org.projectlombok:lombok:1.18.34")
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
+
+    implementation(libs.bstats.bukkit)
+
+    compileOnly(libs.paper.api.get())
 }
 
 tasks {
@@ -53,7 +51,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.processResources {
-    val props = mapOf("version" to project.version)
+    val props = mapOf("version" to version)
     inputs.properties(props)
     filteringCharset = "UTF-8"
     filesMatching("paper-plugin.yml") {
@@ -71,4 +69,13 @@ tasks {
         relocate("org.spongepowered.configurate", "xyz.mayahive.customdaytime.lib.configurate")
         relocate("net.kyori.option", "xyz.mayahive.customdaytime.lib.kyori.option")
     }
+}
+
+paper {
+    name = "CustomDaytime"
+    author = "Seedim"
+    main = "xyz.mayahive.customdaytime.paper.CustomDaytimePaper"
+    apiVersion = "1.21"
+    foliaSupported = true
+    contributors = listOf("PureLove")
 }

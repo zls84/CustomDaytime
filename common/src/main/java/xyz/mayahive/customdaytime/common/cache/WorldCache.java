@@ -16,11 +16,11 @@ public class WorldCache {
     }
 
     public void registerWorld(PlatformWorld world) {
-        worldCache.put(world.getKey(), world);
+        worldCache.put(world.key(), world);
     }
 
     public void unregisterWorld(PlatformWorld world) {
-        worldCache.remove(world.getKey());
+        worldCache.remove(world.key());
     }
 
     public Collection<PlatformWorld> getWorlds() {
